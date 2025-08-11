@@ -16,7 +16,7 @@ interface Product {
 
 function ProductList() {
   const [showAddForm, setShowAddForm] = useState(false);
-  const { data: products, isLoading, error } = useGetProductsQuery();
+  const { data: products, isLoading, error } = useGetProductsQuery(undefined);
 
   if (isLoading) {
     return (
