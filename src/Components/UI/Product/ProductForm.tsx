@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-
+import { useUpdateProductMutation } from '../../../redux/reducers/api/ProductApi';
 function ProductForm() {
   const [currentUser, setCurrentUser] = useState<any>(null);
-
+  const [updateProduct, { isLoading, isError, isSuccess }] = useUpdateProductMutation();
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
@@ -25,32 +25,31 @@ function ProductForm() {
     variant_id: '',
     subvariant_id: ''
   });
-
-  const handleChange = (e) => {
+ 
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, files } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : (type === 'file' ? files[0] : value)
+      [name]:
+        type === "checkbox"
+          ? checked
+          : type === "file"
+          ? files?.[0] || null
+          : value
     }));
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const jsonData = {
+    const payload = {
       ...formData,
       is_favourite: formData.is_favourite ? 1 : 0,
       active: formData.active ? 1 : 0
     };
 
     try {
-      const res = await fetch("https://localhost:5001/api/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(jsonData)
-      });
-
-      const result = await res.json();
+      const result = await updateProduct(payload).unwrap();
       console.log("Response:", result);
 
       if (result.ResponseCode === 1) {
