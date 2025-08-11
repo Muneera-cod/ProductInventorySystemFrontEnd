@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function ProductForm() {
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      try {
+        setCurrentUser(JSON.parse(storedUser)); 
+      } catch (err) {
+        console.error("Error parsing stored user:", err);
+      }
+    }
+  }, []);
   const [formData, setFormData] = useState({
     product_id: '0', // 0 means insert
     product_code: '',
     product_name: '',
     product_image: null,
-    created_user: 'F9FFF214-9040-4EEB-9E48-018CBE653D43', // example GUID
+    created_user: currentUser ? currentUser?.id : 'F9FFF214-9040-4EEB-9E48-018CBE653D43', 
     is_favourite: false,
     active: true,
     hsn_code: '',
