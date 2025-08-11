@@ -1,8 +1,11 @@
 import React from 'react'
-import ProductForm from '../UI/Product/ProductForm'
+import ProductList from '../UI/Product/ProductList.tsx'
+
 function ProductPage() {
   return (
-    <div><ProductForm/></div>
+    <div>
+      <ProductList />
+    </div>
   )
 }
 
